@@ -21,10 +21,7 @@ func (s *mutableString) ToString() string {
     return s.value
 }
 
-type mutation struct {
-}
-
-func (m *mutation) Mutate(specimen specimens.Specimen) {
+func randomLetterMutation(specimen specimens.Specimen) {
     s := specimen.(*mutableString)
     index := rand.Intn(len(s.value))
     s.value = s.value[0:index] + string(rand.Intn(126-32)+32) + s.value[index+1:]
@@ -36,7 +33,7 @@ func main() {
     start, end := os.Args[1], os.Args[2]
 
     engine := ascent.New()
-    engine.Mutations().Register(&mutation{}, 0.99)
+    engine.Mutations().Register(randomLetterMutation, 0.99)
     engine.Mutations().SetIdentityChance(0.01)
     engine.SetGenerationCallback(func(pool []specimens.Specimen) {
         println(pool[0].(*mutableString).value)
