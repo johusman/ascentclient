@@ -61,7 +61,6 @@ func main() {
     engine.Mutations().Register(randomLetterMutation, 0.33)
     engine.Mutations().Register(dropLetterMutation, 0.33)
     engine.Mutations().Register(addLetterMutation, 0.33)
-    engine.Mutations().SetIdentityChance(0.01)
 
     generationCounter := 0
 
@@ -79,7 +78,7 @@ func main() {
             return 0, true
         }
 
-        score := float32(-math.Abs(float64(len(value) - len(goal)))/4.0)
+        score := -float32(math.Abs(float64(len(value) - len(goal)))/4.0)
         for i := 0; i < len(value) && i < len(goal); i++ {
             if value[i] == goal[i] {
                 score += 1.0
