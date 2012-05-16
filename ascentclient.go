@@ -35,8 +35,8 @@ func main() {
     engine := ascent.New()
     engine.Mutations().Register(randomLetterMutation, 0.99)
     engine.Mutations().SetIdentityChance(0.01)
-    engine.SetGenerationCallback(func(pool []specimens.Specimen) {
-        println(pool[0].(*mutableString).value)
+    engine.SetGenerationCallback(func(winner specimens.Specimen) {
+        println(winner.(*mutableString).value)
     })
 
     println(start)
