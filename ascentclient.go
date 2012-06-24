@@ -7,7 +7,6 @@ import (
     "math"
     "os"
     "time"
-    "strings"
     "fmt"
 )
 
@@ -80,18 +79,23 @@ func main() {
     var final specimens.Specimen;
     duration := timeFunction(func() {
         final = engine.Run(4, &mutableString{[]rune(start)}, func(specimen specimens.Specimen) (float32) {
-            specimenCounter++
+            specimenCounter++ // race condition?
             value := specimen.(*mutableString).value
+            lenGoalRunes := len(goalRunes)
+            lenValue := len(value)
 
-            score := -float32(math.Abs(float64(len(value) - len(goalRunes)))/4.0)
-            for i := 0; i < len(value) && i < len(goalRunes); i++ {
+            score := -float32(math.Abs(float64(lenValue - lenGoalRunes))/4.0)
+            for i := 0; i < lenValue && i < lenGoalRunes; i++ {
                 if value[i] == goalRunes[i] {
                     score += 1.0
                 }
             }
-            for i := 0; i < len(goalRunes); i++ {
-                if strings.ContainsRune(string(value), goalRunes[i]) {
-                    score += 1.0
+            for _, goalRune := range goalRunes {
+                contains: for _, valueRune := range value {
+                    if valueRune == goalRune {
+                        score += 1.0
+                        break contains
+                    }
                 }
             }
 
